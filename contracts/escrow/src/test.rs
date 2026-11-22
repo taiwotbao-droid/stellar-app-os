@@ -1,8 +1,8 @@
-#`!cfg(test)]
+#![cfg(test)]
 
 use super::*;
 use soroban_sdk::{
-    testutils {Address as _, Events, Ledger},
+    testutils::{Address as _, Events, Ledger},
     token::{StellarAssetClient, TokenClient},
     vec, Address, Env, IntoVal, Symbol,
 };
@@ -39,7 +39,7 @@ fn test_donate_anonymous_success() {
     env.register_contract(&planter_registry, MockPlanterRegistry);
     env.register_contract(&tree_registry, MockTreeRegistry);
     let amount = 50_0000000i128;
-    token_client.approve(&sponsor, &escrow.address, &amount, &z999999);
+    token_client.approve(&sponsor, &escrow.address, &amount, &999999);
     let result = escrow.donate_anonymous(&amount, &token_id, &symbol_short!("teak"), &symbol_short!("kenya"));
     assert_eq(result.0, 1u64);
     let entry = escrow.get_escrow(&1u64).unwrap();
@@ -104,11 +104,11 @@ fn test_species_costs() {
     assert_eq(escrow.get_species_cost(&symbol_short!("bamboo")), 8_0000000i128);
 }
 
-use soroban_sdk:{contract, contractimpl};
+use soroban_sdk::{contract, contractimpl};
 
 #[contract]
 pub struct MockPlanterRegistry;
-#[contractimplimpl]
+#[contractimpl]
 impl MockPlanterRegistry {
     pub fn get_avail(env: Env, _region: Symbol) -> Vec<Address> {
         vec![&env, Address::generate(&env)]
@@ -121,13 +121,13 @@ pub struct MockEmptyPlanterRegistry;
 #[contractimpl]
 impl MockEmptyPlanterRegistry {
     pub fn get_avail(env: Env, _region: Symbol) -> Vec<Address> {
-        vec!&env]
+        vec![&env]
     }
 }
 
 #[contract]
 pub struct MockTreeRegistry;
-#[contractimplimpl]
+#[contractimpl]
 impl MockTreeRegistry {
     pub fn mint_anon(_env: Env, _species: Symbol, _region: Symbol, _planter: Address) -> u64 {
         1u64
@@ -170,7 +170,7 @@ fn test_invariant_total_xlm_locked_equals_sum_of_sponsorships() {
     let amount3 = 50_0000000i128;
 
     let planter = Address::generate(&env);
-    token_client.approve(&sponsor, &escrow.address, &(amount1 + amount2 + amount3), &z999999);
+    token_client.approve(&sponsor, &escrow.address, &(amount1 + amount2 + amount3), &999999);
 
     escrow.deposit(&sponsor, &planter, &1u64, &token_id, &amount1);
     escrow.deposit(&sponsor, &planter, &2u64, &token_id, &amount2);
@@ -301,7 +301,7 @@ fn test_unpause_restores_operations() {
     let escrow = create_escrow_contract(&env);
     escrow.initialize(&tree_registry, &planter_registry);
     let amount = 50_0000000i128;
-    token_client.approve(&sponsor, &escrow.address, &amount, &z999999);
+    token_client.approve(&sponsor, &escrow.address, &amount, &999999);
     escrow.pause();
     escrow.unpause();
     let planter = Address::generate(&env);
